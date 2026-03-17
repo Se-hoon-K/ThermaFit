@@ -2,6 +2,37 @@
   "expo": {
     "name": "ThermaFit",
     "slug": "ThermaFit",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.thermafit.app",
+      "entitlements": {
+        "com.apple.security.application-groups": ["group.com.thermafit"]
+      }
+    },
+    "android": {
+      "package": "com.thermafit.app",
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+    },
+    "plugins": [
+      "react-native-android-widget",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "ThermaFit uses your location to get local weather for outfit recommendations."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#4f86c6"
+        }
+      ]
+    ],
+    "extra": {
+      "owmApiKey": "YOUR_OWM_API_KEY_HERE"
+    }
   }
 }
