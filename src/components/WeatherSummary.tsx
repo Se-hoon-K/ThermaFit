@@ -17,7 +17,7 @@ function toDisplay(tempC: number, units: Units): string {
 }
 
 export default function WeatherSummary({ weather, units }: Props) {
-  const iconUrl = `https://openweathermap.org/img/wn/${weather.iconCode}@2x.png`;
+  const iconUrl = weather.iconUrl;
 
   return (
     <View style={styles.container}>

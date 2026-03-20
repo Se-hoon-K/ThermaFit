@@ -13,7 +13,7 @@ export interface WeatherData {
   humidity: number;
   windSpeedKph: number;
   cityName: string;
-  iconCode: string;
+  iconUrl: string; // full URL from WeatherAPI CDN
   rainProbability: number; // 0–1, from forecast endpoint
   fetchedAt: number; // Date.now() timestamp
 }

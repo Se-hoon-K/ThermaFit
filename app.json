@@ -16,7 +16,20 @@
       "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
     },
     "plugins": [
-      "react-native-android-widget",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "ThermaFit",
+              "label": "ThermaFit",
+              "minWidth": "130dp",
+              "minHeight": "100dp",
+              "description": "Your personalised outfit recommendation"
+            }
+          ]
+        }
+      ],
       [
         "expo-location",
         {
@@ -30,9 +43,6 @@
           "color": "#4f86c6"
         }
       ]
-    ],
-    "extra": {
-      "owmApiKey": "YOUR_OWM_API_KEY_HERE"
-    }
+    ]
   }
 }
