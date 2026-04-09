@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocation } from '../hooks/useLocation';
 import { useWeather } from '../hooks/useWeather';
@@ -25,13 +26,14 @@ import UmbrellaTip from '../components/UmbrellaTip';
 import LoadingState from '../components/LoadingState';
 import ErrorBanner from '../components/ErrorBanner';
 import FeedbackPrompt from '../components/FeedbackPrompt';
+import ManualLocationInput from '../components/ManualLocationInput';
 import { colors, spacing, fontSizes } from '../constants/theme';
 
 const FEEDBACK_DELAY_MS = 4 * 60 * 60 * 1000; // 4 hours
 
 export default function HomeScreen() {
-  const { coords, error: locError, loading: locLoading, retry: retryLoc } = useLocation();
-  const { weather, error: weatherError, loading: weatherLoading, refresh } = useWeather(coords);
+  const { location, error: locError, loading: locLoading, setManualLocation, retryGPS } = useLocation();
+  const { weather, error: weatherError, loading: weatherLoading, refresh } = useWeather(location);
   const { prefs } = usePreferences();
 
   const [showFeedback, setShowFeedback] = useState(false);
@@ -49,22 +51,45 @@ export default function HomeScreen() {
     }
   }, [weather, suggestion, prefs]);
 
-  // Record a pending feedback entry and check if we should show the prompt
+  // Record pending feedback, schedule a notification, and show prompt if 4 h elapsed
   useEffect(() => {
     if (!weather) return;
 
+    const now = Date.now();
     const pending: PendingFeedback = {
-      id: `${Date.now()}`,
-      recordedAt: Date.now(),
+      id: `${now}`,
+      recordedAt: now,
       tempC: weather.tempC,
       sensitivity: prefs.sensitivity,
     };
+
     savePendingFeedback(pending);
     setPendingFeedback(pending);
 
-    // Check for a previous pending entry that is now ≥4h old
+    // Schedule "How was it?" notification for 4 hours from now
+    Notifications.cancelAllScheduledNotificationsAsync().then(() =>
+      Notifications.scheduleNotificationAsync({
+        content: {
+          title: 'ThermaFit',
+          body: 'How was your outfit today?',
+          data: { action: 'feedback' },
+          ...(require('react-native').Platform.OS === 'android' && {
+            channelId: 'feedback',
+          }),
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: FEEDBACK_DELAY_MS / 1000,
+          repeats: false,
+        },
+      }).catch(() => {
+        // Notification permission not granted — in-app fallback handles it
+      }),
+    );
+
+    // Show in-app prompt if the previous pending record is ≥ 4 h old
     loadPendingFeedback().then((p) => {
-      if (p && Date.now() - p.recordedAt >= FEEDBACK_DELAY_MS) {
+      if (p && now - p.recordedAt >= FEEDBACK_DELAY_MS) {
         setPendingFeedback(p);
         setShowFeedback(true);
       }
@@ -75,19 +100,25 @@ export default function HomeScreen() {
     setShowFeedback(false);
     if (!pendingFeedback) return;
     const message = await recordFeedback(pendingFeedback, outcome);
-    if (message) {
-      Alert.alert('ThermaFit updated', message);
-    }
+    if (message) Alert.alert('ThermaFit updated', message);
   };
 
-  const isLoading = locLoading || weatherLoading;
-  const error = locError ?? weatherError;
-
-  if (isLoading && !weather) {
+  // Show loading while getting location or weather (and nothing to show yet)
+  if ((locLoading || weatherLoading) && !weather) {
     return (
       <SafeAreaView style={styles.safe}>
         <LoadingState message={locLoading ? 'Finding your location…' : 'Getting weather…'} />
       </SafeAreaView>
+    );
+  }
+
+  // GPS failed and no manual fallback saved — show city input
+  if (locError === 'LOCATION_UNAVAILABLE' && !weather) {
+    return (
+      <ManualLocationInput
+        onConfirm={setManualLocation}
+        onRetryGPS={retryGPS}
+      />
     );
   }
 
@@ -96,13 +127,20 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Location header */}
         <View style={styles.locationRow}>
-          <Text style={styles.locationPin}>📍</Text>
+          <Text style={styles.locationPin}>
+            {location?.source === 'manual' ? '🔍' : '📍'}
+          </Text>
           <Text style={styles.cityName}>{weather?.cityName ?? '…'}</Text>
+          {location?.source === 'manual' && (
+            <TouchableOpacity onPress={retryGPS} style={styles.gpsRetry}>
+              <Text style={styles.gpsRetryText}>Use GPS</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
-        {/* Error banner */}
-        {error && (
-          <ErrorBanner error={error} onRetry={error === 'PERMISSION_DENIED' ? undefined : () => { retryLoc(); refresh(); }} />
+        {/* Weather error banner (not location error — that's handled above) */}
+        {weatherError && (
+          <ErrorBanner error={weatherError} onRetry={refresh} />
         )}
 
         {/* Weather summary */}
@@ -173,6 +211,18 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.lg,
     fontWeight: '600',
     color: colors.text,
+    flex: 1,
+  },
+  gpsRetry: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 3,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  gpsRetryText: {
+    fontSize: fontSizes.xs,
+    color: colors.textSecondary,
   },
   refreshButton: {
     marginTop: spacing.xl,

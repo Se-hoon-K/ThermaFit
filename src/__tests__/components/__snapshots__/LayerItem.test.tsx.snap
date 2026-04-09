@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<LayerItem /> matches snapshot 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#16213e",
+      "borderRadius": 12,
+      "flexDirection": "row",
+      "gap": 8,
+      "marginBottom": 8,
+      "paddingHorizontal": 16,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "fontSize": 24,
+      }
+    }
+  >
+    🧥
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#e8e8f0",
+        "fontSize": 15,
+        "fontWeight": "500",
+      }
+    }
+  >
+    Light jacket
+  </Text>
+</View>
+`;

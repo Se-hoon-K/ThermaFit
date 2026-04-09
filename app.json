@@ -4,6 +4,13 @@
     "slug": "ThermaFit",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "thermafit",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a1a2e"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.thermafit.app",
@@ -13,6 +20,7 @@
     },
     "android": {
       "package": "com.thermafit.app",
+      "versionCode": 1,
       "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
     },
     "plugins": [

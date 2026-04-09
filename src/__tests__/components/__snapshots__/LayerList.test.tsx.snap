@@ -1,0 +1,223 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<LayerList /> matches snapshot in imperial 1`] = `
+<View
+  style={
+    {
+      "marginTop": 16,
+      "width": "100%",
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "#4f86c6",
+        "fontSize": 15,
+        "fontWeight": "600",
+        "marginBottom": 16,
+        "textAlign": "center",
+      }
+    }
+  >
+    Feels like 
+    32°F
+     for you
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#9090a8",
+        "fontSize": 13,
+        "fontWeight": "600",
+        "letterSpacing": 0.5,
+        "marginBottom": 8,
+        "textTransform": "uppercase",
+      }
+    }
+  >
+    What to wear:
+  </Text>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#16213e",
+        "borderRadius": 12,
+        "flexDirection": "row",
+        "gap": 8,
+        "marginBottom": 8,
+        "paddingHorizontal": 16,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "fontSize": 24,
+        }
+      }
+    >
+      🧥
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#e8e8f0",
+          "fontSize": 15,
+          "fontWeight": "500",
+        }
+      }
+    >
+      Light jacket
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#16213e",
+        "borderRadius": 12,
+        "flexDirection": "row",
+        "gap": 8,
+        "marginBottom": 8,
+        "paddingHorizontal": 16,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "fontSize": 24,
+        }
+      }
+    >
+      👕
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#e8e8f0",
+          "fontSize": 15,
+          "fontWeight": "500",
+        }
+      }
+    >
+      Long-sleeve top
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`<LayerList /> matches snapshot in metric 1`] = `
+<View
+  style={
+    {
+      "marginTop": 16,
+      "width": "100%",
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "#4f86c6",
+        "fontSize": 15,
+        "fontWeight": "600",
+        "marginBottom": 16,
+        "textAlign": "center",
+      }
+    }
+  >
+    Feels like 
+    12°C
+     for you
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#9090a8",
+        "fontSize": 13,
+        "fontWeight": "600",
+        "letterSpacing": 0.5,
+        "marginBottom": 8,
+        "textTransform": "uppercase",
+      }
+    }
+  >
+    What to wear:
+  </Text>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#16213e",
+        "borderRadius": 12,
+        "flexDirection": "row",
+        "gap": 8,
+        "marginBottom": 8,
+        "paddingHorizontal": 16,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "fontSize": 24,
+        }
+      }
+    >
+      🧥
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#e8e8f0",
+          "fontSize": 15,
+          "fontWeight": "500",
+        }
+      }
+    >
+      Light jacket
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#16213e",
+        "borderRadius": 12,
+        "flexDirection": "row",
+        "gap": 8,
+        "marginBottom": 8,
+        "paddingHorizontal": 16,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "fontSize": 24,
+        }
+      }
+    >
+      👕
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#e8e8f0",
+          "fontSize": 15,
+          "fontWeight": "500",
+        }
+      }
+    >
+      Long-sleeve top
+    </Text>
+  </View>
+</View>
+`;

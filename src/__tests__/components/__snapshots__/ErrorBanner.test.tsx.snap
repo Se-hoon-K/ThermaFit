@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ErrorBanner /> matches snapshot with PERMISSION_DENIED and no retry 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#e9456020",
+      "borderLeftColor": "#e94560",
+      "borderLeftWidth": 3,
+      "borderRadius": 8,
+      "gap": 8,
+      "margin": 16,
+      "padding": 16,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "#e94560",
+        "fontSize": 13,
+        "fontWeight": "500",
+      }
+    }
+  >
+    Location access denied. Please enable it in Settings.
+  </Text>
+</View>
+`;
+
+exports[`<ErrorBanner /> matches snapshot with retry button 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#e9456020",
+      "borderLeftColor": "#e94560",
+      "borderLeftWidth": 3,
+      "borderRadius": 8,
+      "gap": 8,
+      "margin": 16,
+      "padding": 16,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "#e94560",
+        "fontSize": 13,
+        "fontWeight": "500",
+      }
+    }
+  >
+    Could not get your location. Tap to retry.
+  </Text>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignSelf": "flex-start",
+        "backgroundColor": "#e94560",
+        "borderRadius": 8,
+        "opacity": 1,
+        "paddingHorizontal": 16,
+        "paddingVertical": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#e8e8f0",
+          "fontSize": 13,
+          "fontWeight": "700",
+        }
+      }
+    >
+      Retry
+    </Text>
+  </View>
+</View>
+`;

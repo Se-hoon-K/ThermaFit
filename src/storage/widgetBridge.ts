@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WeatherData } from '../types/weather';
 import { LayerSuggestion } from '../types/layers';
 import { UserPreferences } from '../types/preferences';
+import { setAppGroupWidgetData } from '../native/AppGroupBridge';
 
 const WIDGET_KEY = 'thermafit_widget_snapshot';
 
@@ -19,7 +20,10 @@ export interface WidgetSnapshot {
  */
 export async function writeWidgetSnapshot(snapshot: WidgetSnapshot): Promise<void> {
   try {
-    await AsyncStorage.setItem(WIDGET_KEY, JSON.stringify(snapshot));
+    const json = JSON.stringify(snapshot);
+    await AsyncStorage.setItem(WIDGET_KEY, json);
+    // iOS WidgetKit reads from App Groups UserDefaults, not AsyncStorage
+    await setAppGroupWidgetData(json);
   } catch {
     // Non-critical — widget will just show stale data
   }

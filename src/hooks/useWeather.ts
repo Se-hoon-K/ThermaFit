@@ -2,22 +2,23 @@ import { useState, useEffect, useCallback } from 'react';
 import { WeatherData } from '../types/weather';
 import { fetchWeather } from '../services/weatherService';
 import { getCachedWeather, setCachedWeather } from '../storage/weatherCache';
-import { Coords } from './useLocation';
+import { saveLastQuery } from '../storage/locationStorage';
+import { LocationState } from './useLocation';
 
-export function useWeather(coords: Coords | null) {
+export function useWeather(location: LocationState | null) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const fetch_ = useCallback(
     async (forceRefresh = false) => {
-      if (!coords) return;
+      if (!location) return;
       setLoading(true);
       setError(null);
 
       // Check cache first (unless user explicitly refreshed)
       if (!forceRefresh) {
-        const cached = await getCachedWeather(coords.latitude, coords.longitude);
+        const cached = await getCachedWeather(location.query);
         if (cached) {
           setWeather(cached);
           setLoading(false);
@@ -26,9 +27,10 @@ export function useWeather(coords: Coords | null) {
       }
 
       try {
-        const data = await fetchWeather(coords.latitude, coords.longitude);
+        const data = await fetchWeather(location.query);
         setWeather(data);
-        await setCachedWeather(coords.latitude, coords.longitude, data);
+        await setCachedWeather(location.query, data);
+        await saveLastQuery(location.query);
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : 'UNKNOWN';
         setError(msg);
@@ -36,14 +38,13 @@ export function useWeather(coords: Coords | null) {
         setLoading(false);
       }
     },
-    [coords],
+    [location],
   );
 
   useEffect(() => {
     fetch_();
   }, [fetch_]);
 
-  // refresh() always bypasses cache
   const refresh = useCallback(() => fetch_(true), [fetch_]);
 
   return { weather, error, loading, refresh };

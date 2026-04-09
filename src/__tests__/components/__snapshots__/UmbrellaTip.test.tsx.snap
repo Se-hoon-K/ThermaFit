@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UmbrellaTip /> matches snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#4f86c620",
+      "borderLeftColor": "#4f86c6",
+      "borderLeftWidth": 3,
+      "borderRadius": 8,
+      "marginVertical": 8,
+      "padding": 16,
+      "width": "100%",
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "#4f86c6",
+        "fontSize": 15,
+        "fontWeight": "600",
+      }
+    }
+  >
+    🌂 Rain likely later — bring an umbrella
+  </Text>
+</View>
+`;

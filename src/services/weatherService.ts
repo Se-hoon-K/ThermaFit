@@ -13,16 +13,7 @@ function mapCondition(code: number, windKph: number): WeatherCondition {
     return windKph > 40 ? 'windy' : 'cloudy';
   // Fog / Mist / Freezing fog
   if (code === 1030 || code === 1135 || code === 1147) return 'fog';
-  // Rain: drizzle, rain, freezing drizzle, sleet showers, thunderstorm with rain
-  if (
-    (code >= 1063 && code <= 1072) ||
-    (code >= 1150 && code <= 1201) ||
-    (code >= 1240 && code <= 1246) ||
-    code === 1273 ||
-    code === 1276
-  )
-    return 'rain';
-  // Snow: blizzard, snow, ice pellets, snow showers, thunderstorm with snow
+  // Snow checked before rain — codes 1066/1069 overlap with the 1063–1072 rain range
   if (
     code === 1066 ||
     code === 1069 ||
@@ -34,16 +25,26 @@ function mapCondition(code: number, windKph: number): WeatherCondition {
     code === 1282
   )
     return 'snow';
+  // Rain: drizzle, rain, freezing drizzle, sleet showers, thunderstorm with rain
+  if (
+    (code >= 1063 && code <= 1072) ||
+    (code >= 1150 && code <= 1201) ||
+    (code >= 1240 && code <= 1246) ||
+    code === 1273 ||
+    code === 1276
+  )
+    return 'rain';
   // Fallback
   return windKph > 40 ? 'windy' : 'cloudy';
 }
 
-export async function fetchWeather(
-  lat: number,
-  lon: number,
-): Promise<WeatherData> {
+/**
+ * query — either "lat,lon" (from GPS) or a city name string (manual input).
+ * WeatherAPI accepts both formats as the `q` parameter.
+ */
+export async function fetchWeather(query: string): Promise<WeatherData> {
   const url =
-    `${BASE}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=1&aqi=no&alerts=no`;
+    `${BASE}/forecast.json?key=${API_KEY}&q=${encodeURIComponent(query)}&days=1&aqi=no&alerts=no`;
 
   const res = await fetch(url);
 

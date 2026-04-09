@@ -65,15 +65,17 @@ export async function recordFeedback(
   await saveFeedbackHistory(history);
   await clearPendingFeedback();
 
-  // Analyze last 5 entries
+  // Analyze last 5 entries — require at least 4 before adjusting
   const last5 = history.slice(-5);
-  if (last5.length < 3) return null;
+  if (last5.length < 4) return null;
 
   const coldCount = last5.filter((e) => e.outcome === 'cold').length;
   const warmCount = last5.filter((e) => e.outcome === 'warm').length;
 
+  // Use the sensitivity value recorded when this session started (pending.sensitivity)
+  // rather than the current stored value, which may have already been adjusted.
+  const current = pending.sensitivity as Sensitivity;
   const prefs = await loadPreferences();
-  const current = prefs.sensitivity as Sensitivity;
 
   if (coldCount >= 3 && current > -2) {
     const newSensitivity = (current - 1) as Sensitivity;

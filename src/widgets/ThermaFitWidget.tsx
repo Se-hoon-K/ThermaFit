@@ -103,7 +103,7 @@ export function ThermaFitWidget({ snapshot }: Props) {
       )}
 
       {/* Layers */}
-      <FlexWidget style={{ flexDirection: 'column', marginTop: 6, gap: 2 }}>
+      <FlexWidget style={{ flexDirection: 'column', marginTop: 6 }}>
         {topLayers.map((layer, i) => (
           <TextWidget
             key={i}

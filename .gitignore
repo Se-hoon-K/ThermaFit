@@ -33,5 +33,14 @@ yarn-error.*
 .env
 .env*.local
 
+# Android local config (machine-specific)
+android/local.properties
+
 # typescript
 *.tsbuildinfo
+
+# Claude Code internal files
+.claude/
+
+# Google Play service account key (sensitive — never commit)
+google-play-key.json

@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<LoadingState /> matches snapshot with custom message 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flex": 1,
+      "gap": 16,
+      "justifyContent": "center",
+    }
+  }
+>
+  <ActivityIndicator
+    color="#4f86c6"
+    size="large"
+  />
+  <Text
+    style={
+      {
+        "color": "#9090a8",
+        "fontSize": 15,
+      }
+    }
+  >
+    Finding your location…
+  </Text>
+</View>
+`;
+
+exports[`<LoadingState /> matches snapshot with default message 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flex": 1,
+      "gap": 16,
+      "justifyContent": "center",
+    }
+  }
+>
+  <ActivityIndicator
+    color="#4f86c6"
+    size="large"
+  />
+  <Text
+    style={
+      {
+        "color": "#9090a8",
+        "fontSize": 15,
+      }
+    }
+  >
+    Getting weather…
+  </Text>
+</View>
+`;
