@@ -5,15 +5,31 @@ import {
   Switch,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { usePreferences } from '../hooks/usePreferences';
+import { useAuth } from '../hooks/useAuth';
 import SensitivityPicker from '../components/SensitivityPicker';
 import { Sensitivity } from '../types/preferences';
 import { colors, spacing, fontSizes, radius } from '../constants/theme';
 
 export default function SettingsScreen() {
   const { prefs, setPrefs } = usePreferences();
+  const {
+    isAnonymous,
+    provider,
+    email,
+    isLoading,
+    appleAvailable,
+    handleSignInWithApple,
+    handleSignInWithGoogle,
+    handleSignOut,
+  } = useAuth();
 
   const updateSensitivity = (s: Sensitivity) => {
     setPrefs({ ...prefs, sensitivity: s });
@@ -21,6 +37,17 @@ export default function SettingsScreen() {
 
   const toggleUnits = (val: boolean) => {
     setPrefs({ ...prefs, units: val ? 'imperial' : 'metric' });
+  };
+
+  const confirmSignOut = () => {
+    Alert.alert(
+      'Sign out',
+      'Your calibration data stays on the server. Local history will be cleared for privacy.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Sign out', style: 'destructive', onPress: handleSignOut },
+      ],
+    );
   };
 
   return (
@@ -59,6 +86,60 @@ export default function SettingsScreen() {
               </Text>
             </View>
           </View>
+        </View>
+
+        <View style={styles.divider} />
+
+        {/* Account */}
+        <View style={styles.section}>
+          {isAnonymous ? (
+            <>
+              <Text style={styles.sectionTitle}>Back up &amp; restore</Text>
+              <Text style={styles.infoText}>
+                Sign in to save your calibration data to the cloud. Switching phones or
+                reinstalling will restore everything automatically.
+              </Text>
+
+              {appleAvailable && Platform.OS === 'ios' && (
+                <AppleAuthentication.AppleAuthenticationButton
+                  buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+                  buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
+                  cornerRadius={radius.md}
+                  style={styles.appleButton}
+                  onPress={handleSignInWithApple}
+                />
+              )}
+
+              <TouchableOpacity
+                style={[styles.googleButton, isLoading && styles.buttonDisabled]}
+                onPress={handleSignInWithGoogle}
+                disabled={isLoading}
+                accessibilityLabel="Sign in with Google"
+              >
+                {isLoading
+                  ? <ActivityIndicator color={colors.text} />
+                  : <Text style={styles.googleButtonText}>Sign in with Google</Text>
+                }
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <Text style={styles.sectionTitle}>Account</Text>
+              <View style={styles.row}>
+                <View>
+                  <Text style={styles.rowLabel}>
+                    {provider === 'apple' ? 'Apple' : 'Google'}
+                  </Text>
+                  <Text style={styles.rowSub}>
+                    {email ?? 'Signed in — data backed up'}
+                  </Text>
+                </View>
+                <TouchableOpacity onPress={confirmSignOut} accessibilityLabel="Sign out">
+                  <Text style={styles.signOutText}>Sign out</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </View>
 
         <View style={styles.divider} />
@@ -143,5 +224,34 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceAlt,
     borderRadius: radius.md,
     padding: spacing.md,
+  },
+  appleButton: {
+    width: '100%',
+    height: 44,
+    marginTop: spacing.md,
+  },
+  googleButton: {
+    width: '100%',
+    height: 44,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.sm,
+  },
+  googleButtonText: {
+    color: colors.text,
+    fontSize: fontSizes.md,
+    fontWeight: '600',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+  signOutText: {
+    fontSize: fontSizes.sm,
+    color: colors.danger,
+    fontWeight: '600',
   },
 });

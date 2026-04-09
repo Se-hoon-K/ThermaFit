@@ -7,7 +7,14 @@ import * as Notifications from 'expo-notifications';
 import { PreferencesProvider } from './src/hooks/usePreferences';
 import RootNavigator from './src/navigation/RootNavigator';
 import { registerBackgroundRefresh } from './src/tasks/backgroundRefresh';
-import { initializeAuth, pullPreferences } from './src/services/syncService';
+import {
+  initializeAuth,
+  pullPreferences,
+  pullFeedbackHistory,
+  pushAllFeedbackHistory,
+  runServerCalibration,
+} from './src/services/syncService';
+import { configureGoogleSignIn } from './src/services/authService';
 
 // Show notifications as banners even when app is foregrounded
 Notifications.setNotificationHandler({
@@ -21,6 +28,9 @@ Notifications.setNotificationHandler({
 
 export default function App() {
   useEffect(() => {
+    // Configure Google Sign In before any auth calls
+    configureGoogleSignIn(process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '');
+
     async function setup() {
       // Create Android notification channel
       if (Platform.OS === 'android') {
@@ -37,10 +47,23 @@ export default function App() {
       // Register background weather refresh
       await registerBackgroundRefresh();
 
-      // Initialize Supabase anonymous auth, then restore preferences from server
-      // (handles "new device / reinstall" case — no-op when offline)
+      // Initialize Supabase anonymous auth, then run the full sync pipeline:
+      // 1. Restore preferences on new device / reinstall
+      // 2. Restore feedback history so calibration has context
+      // 3. Push any local entries recorded before Supabase was connected
+      // 4. Run server-side calibration on full history (stronger signal than 5 local)
       const userId = await initializeAuth();
-      if (userId) await pullPreferences();
+      if (userId) {
+        await pullPreferences();
+        await pullFeedbackHistory();
+        await pushAllFeedbackHistory();
+        const calibrationMsg = await runServerCalibration();
+        if (calibrationMsg) {
+          // Lazy import to avoid circular dependency at module load time
+          const { Alert } = await import('react-native');
+          Alert.alert('ThermaFit updated', calibrationMsg);
+        }
+      }
     }
 
     setup();

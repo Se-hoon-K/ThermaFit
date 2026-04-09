@@ -15,9 +15,8 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.thermafit.app",
       "entitlements": {
-        "com.apple.security.application-groups": [
-          "group.com.thermafit"
-        ]
+        "com.apple.security.application-groups": ["group.com.thermafit"],
+        "com.apple.developer.applesignin": ["Default"]
       }
     },
     "android": {
@@ -56,7 +55,14 @@
           "color": "#4f86c6"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-apple-authentication",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.REPLACE_WITH_REVERSED_CLIENT_ID"
+        }
+      ]
     ]
   }
 }

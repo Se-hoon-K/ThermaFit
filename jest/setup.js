@@ -20,6 +20,25 @@ jest.mock('expo-secure-store', () => ({
 
 jest.mock('react-native-url-polyfill/auto', () => {});
 
+jest.mock('expo-apple-authentication', () => ({
+  isAvailableAsync: jest.fn(() => Promise.resolve(false)),
+  signInAsync: jest.fn(),
+  AppleAuthenticationButtonType: { SIGN_IN: 'SIGN_IN' },
+  AppleAuthenticationButtonStyle: { WHITE: 'WHITE' },
+  AppleAuthenticationScope: { FULL_NAME: 'FULL_NAME', EMAIL: 'EMAIL' },
+  AppleAuthenticationButton: 'AppleAuthenticationButton',
+}));
+
+jest.mock('@react-native-google-signin/google-signin', () => ({
+  GoogleSignin: {
+    configure: jest.fn(),
+    hasPlayServices: jest.fn(() => Promise.resolve(true)),
+    signIn: jest.fn(() => Promise.resolve({ data: { idToken: 'mock-token' } })),
+    signOut: jest.fn(() => Promise.resolve()),
+  },
+  statusCodes: { SIGN_IN_CANCELLED: 'SIGN_IN_CANCELLED' },
+}));
+
 jest.mock('../src/services/supabaseClient', () => ({
   supabase: {
     auth: {
