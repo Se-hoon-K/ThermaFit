@@ -7,6 +7,7 @@ import * as Notifications from 'expo-notifications';
 import { PreferencesProvider } from './src/hooks/usePreferences';
 import RootNavigator from './src/navigation/RootNavigator';
 import { registerBackgroundRefresh } from './src/tasks/backgroundRefresh';
+import { initializeAuth, pullPreferences } from './src/services/syncService';
 
 // Show notifications as banners even when app is foregrounded
 Notifications.setNotificationHandler({
@@ -35,6 +36,11 @@ export default function App() {
 
       // Register background weather refresh
       await registerBackgroundRefresh();
+
+      // Initialize Supabase anonymous auth, then restore preferences from server
+      // (handles "new device / reinstall" case — no-op when offline)
+      const userId = await initializeAuth();
+      if (userId) await pullPreferences();
     }
 
     setup();

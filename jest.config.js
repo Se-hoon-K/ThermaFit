@@ -5,7 +5,7 @@ module.exports = {
   setupFiles: ['<rootDir>/jest/setup.js'],
   testMatch: ['**/__tests__/**/*.test.[jt]s?(x)'],
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|expo-modules-core|react-navigation|@react-navigation/.*|react-native-android-widget|expo-linear-gradient)/)',
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|expo-modules-core|react-navigation|@react-navigation/.*|react-native-android-widget|expo-linear-gradient|@supabase|react-native-url-polyfill)/)',
   ],
   collectCoverageFrom: [
     'src/logic/**/*.ts',

@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FeedbackEntry, FeedbackOutcome, PendingFeedback } from '../types/feedback';
 import { Sensitivity } from '../types/preferences';
 import { loadPreferences, savePreferences } from './preferencesStorage';
+import { syncFeedbackEntry } from '../services/syncService';
 
 const FEEDBACK_KEY = 'thermafit_feedback';
 const PENDING_KEY = 'thermafit_pending_feedback';
@@ -64,6 +65,8 @@ export async function recordFeedback(
   history.push(entry);
   await saveFeedbackHistory(history);
   await clearPendingFeedback();
+  // Fire-and-forget — sync error must never block the local flow
+  syncFeedbackEntry(entry).catch(() => {});
 
   // Analyze last 5 entries — require at least 4 before adjusting
   const last5 = history.slice(-5);

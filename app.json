@@ -15,13 +15,18 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.thermafit.app",
       "entitlements": {
-        "com.apple.security.application-groups": ["group.com.thermafit"]
+        "com.apple.security.application-groups": [
+          "group.com.thermafit"
+        ]
       }
     },
     "android": {
       "package": "com.thermafit.app",
       "versionCode": 1,
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "plugins": [
       [
@@ -50,7 +55,8 @@
           "icon": "./assets/icon.png",
           "color": "#4f86c6"
         }
-      ]
+      ],
+      "expo-secure-store"
     ]
   }
 }
